@@ -33,11 +33,6 @@ Insights derived from the visualizations:
 - **Home vs. Away Performance**  
   ![Home vs Away](home_away_performance_annotated.png)
 
-- **Total Goals Distribution**  
-  ![Goals Distribution](Distribution_of_Total_Goals_per_Match.png)
-
-- **Average Goals Over Years**  
-  ![Goal Trends](Average Goals per Match Over Years.png)
 
 - **Germany's FIFA Ranking Over Time**  
   ![Germany Ranking](germany_rank_progression.png)
