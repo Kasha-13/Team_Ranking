@@ -37,7 +37,7 @@ Insights derived from the visualizations:
   ![Goals Distribution](Distribution_of_Total_Goals_per_Match.png)
 
 - **Average Goals Over Years**  
-  ![Goal Trends](Average_Goals_per_Match_Over_Years.png)
+  ![Goal Trends](Average Goals per Match Over Years.png)
 
 - **Germany's FIFA Ranking Over Time**  
   ![Germany Ranking](germany_rank_progression.png)
