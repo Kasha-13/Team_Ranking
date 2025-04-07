@@ -1,126 +1,116 @@
-README: Soccer Match Analysis and Prediction Using a Bivariate Poisson Model
+# ⚽ Soccer Match Analysis and Prediction Using a Bivariate Poisson Model
 
-Overview
+## 📌 Overview
 
-This project involves analyzing FIFA World Cup match data to model team performance and predict match outcomes. The approach combines data processing, exploratory analysis, and statistical modeling, with a particular focus on using a Bivariate Poisson model to estimate team scoring rates and match outcomes. The workflow includes dataset preparation, visualization, model training, evaluation, and ranking prediction.
+This project analyzes **FIFA World Cup match data** to model team performance and predict outcomes using a **Bivariate Poisson model**. The workflow includes:
 
-1. Data Loading and Preprocessing
+- Data preprocessing
+- Exploratory Data Analysis (EDA)
+- Time-weighted modeling
+- Predictive modeling using Maximum Likelihood Estimation (MLE)
+- Evaluation using Rank Probability Score (RPS)
+- Comparison of Germany’s predicted FIFA ranking vs. actual rankings
 
-The script begins by importing relevant libraries such as pandas, numpy, matplotlib, and seaborn, followed by reading two datasets:
+---
 
-Match Data (matches.csv): Contains information on match results, team performances, and match outcomes.
+## 🧾 1. Data Loading and Preprocessing
 
-FIFA Ranking Data (fifa_ranking-2024-06-20.csv): Includes historical FIFA rankings of various teams.
+The script uses the following datasets:
+- `matches.csv` – Match results, team performances, outcomes
+- `fifa_ranking-2024-06-20.csv` – Historical FIFA team rankings
 
-After loading the datasets, the script:
+### Steps:
+- Filters only **FIFA Men’s World Cup matches**
+- Converts `match_date` to datetime for chronological analysis
+- Selects relevant columns and checks for missing values
 
-Filters only FIFA Men’s World Cup matches.
+---
 
-Selects relevant columns for analysis.
+## 📊 2. Exploratory Data Analysis (EDA)
 
-Converts match_date to a datetime format for chronological sorting and time-based computations.
+Insights derived from the visualizations:
 
-Checks for missing values.
+- **Home vs. Away Performance**  
+  ![Home vs Away](home_away_performance_annotated.png)
 
-2. Exploratory Data Analysis (EDA)
+- **Total Goals Distribution**  
+  ![Goals Distribution](Distribution_of_Total_Goals_per_Match.png)
 
-Several visualizations provide insights into match outcomes and scoring trends:
+- **Average Goals Over Years**  
+  ![Goal Trends](Average_Goals_per_Match_Over_Years.png)
 
-Home vs Away Performance: A bar plot showing win distributions for home teams, away teams, and draws.
+- **Germany's FIFA Ranking Over Time**  
+  ![Germany Ranking](germany_rank_progression.png)
 
-Total Goals Distribution: A histogram displaying the distribution of total goals per match.
+---
 
-Goals Trend Over Time: A line plot illustrating how the average number of goals per match has evolved over the years.
+## 🧠 3. Data Splitting and Time Decay
 
-Germany's FIFA Ranking Over Time: A line chart depicting Germany's FIFA ranking progression.
+- Dataset split: **80% training / 20% testing**
+- Matches are **chronologically ordered**
+- Introduced **time-weighting**:
+  - Exponential decay applied to older matches
+  - **Half-period**: 390 days
+  - Gives more importance to recent performances
 
-These analyses help in understanding past trends and inform the modeling phase.
+---
 
-3. Data Splitting and Time Weight Calculation
+## 🔬 4. Bivariate Poisson Model for Match Prediction
 
-The dataset is split into training (80%) and testing (20%) subsets, ensuring chronological order is maintained. A time-weighting function is applied to account for recency effects:
+### 4.1 Model Overview
+- Predicts match outcomes by estimating:
+  - `λ_home` = Home team's scoring rate  
+  - `λ_away` = Away team's scoring rate  
+  - `λ_common` = Shared influence on both teams’ scores
 
-Older matches receive exponentially lower weights.
+### 4.2 Parameter Estimation
+- Used **Maximum Likelihood Estimation (MLE)** with **L-BFGS-B** optimization
+- Parameters bounded to ensure positivity
+- Model learns scoring tendencies of each team
 
-Time decay is modeled using a half-period of 390 days.
+### 4.3 Outcome Prediction
+- Goal probability matrix generated per match
+- Most probable scoreline selected
+- Predictions saved and analyzed
 
-Weights are calculated separately for training and test data.
+---
 
-This ensures that recent matches have a stronger influence on the predictive model.
+## 🧪 5. Model Evaluation: Rank Probability Score (RPS)
 
-4. Bivariate Poisson Model for Match Prediction
+- **RPS** evaluates prediction quality by comparing predicted vs. actual outcomes
+- Lower scores = better accuracy
 
-The core statistical model in this project is a Bivariate Poisson model, which estimates goal distributions based on:
+---
 
-Team-specific home and away scoring rates.
+## 🇩🇪 6. Germany’s FIFA Ranking vs. Predictions
 
-A common dependency factor that accounts for goal correlations between teams.
+- Used **FIFA 2006–2018 ranking formula**:
+  - Match importance
+  - Opponent strength
+  - Confederation weighting
+- Predicted vs. Actual rankings visualized:
+  - ![Germany 2014 Comparison](germany_ranking_2014.png)
 
-4.1 Model Formulation
+---
 
-The likelihood function is implemented using Maximum Likelihood Estimation (MLE):
+## 📁 Outputs
 
-Each team has a home (\lambda_{home}) and away (\lambda_{away}) scoring rate.
+| Visualization | Description |
+|---------------|-------------|
+| `home_away_performance_annotated.png` | Home vs. Away win distribution |
+| `Distribution_of_Total_Goals_per_Match.png` | Total goal distribution |
+| `Average_Goals_per_Match_Over_Years.png` | Trend of average goals per match |
+| `germany_rank_progression.png` | Germany's FIFA ranking trend |
+| `germany_ranking_2014.png` | Germany’s predicted vs. actual ranking (2014) |
 
-A common dependency factor (\lambda_{common}) models shared goal tendencies.
+---
 
-The probability of a match outcome is computed using Poisson probability mass functions for home and away teams.
+## 📎 Notes
 
-The likelihood function is weighted by the time decay factor.
+- The Bivariate Poisson model is particularly effective for **goal-based sports predictions**
+- Time-weighted models improve performance by focusing on **more recent matches**
+- The ranking comparison provides a unique side-analysis for **national team performance tracking**
 
-4.2 Parameter Estimation
+---
 
-Using the training dataset, parameters are optimized via the L-BFGS-B method:
-
-The optimization minimizes the negative log-likelihood of observed match outcomes.
-
-Bounds are set to ensure positive values for all Poisson rates.
-
-The final model provides optimized scoring rates for each team.
-
-4.3 Match Outcome Prediction
-
-Using the trained model, match outcomes are predicted for the test dataset:
-
-Goal probability matrices are computed for each match.
-
-The most likely scoreline is determined from the matrix.
-
-Predictions are stored and analyzed.
-
-5. Model Evaluation: Rank Probability Score (RPS)
-
-To assess model performance, the Rank Probability Score (RPS) is computed:
-
-RPS measures how well predicted probabilities align with actual match outcomes.
-
-A lower RPS indicates better predictive accuracy.
-
-The final mean RPS score is displayed as a summary metric.
-
-6. Germany’s Ranking Calculation vs. Actual FIFA Rankings
-
-A secondary analysis evaluates Germany's predicted FIFA rankings:
-
-Calculation are based on match results and FIFA's 2006-2018 ranking formula.
-
-Match importance, opponent strength, and confederation coefficients are considered.
-
-The predicted rankings are compared with actual historical rankings.
-
-A ranking progression plot visualizes the prediction accuracy, with a focus on Germany's 2014 World Cup performance.
-
-
-
-Outputs:
-
-home_away_performance_annotated.png: Home vs Away win distribution
-
-Distribution of Total Goals per Match.png: Goal distribution plot
-
-Average Goals per Match Over Years.png: Goal trend plot
-
-germany_rank_progression.png: Germany’s FIFA ranking over time
-
-germany_ranking_2014.png: Germany's ranking comparison during the 2014 World Cup
 
